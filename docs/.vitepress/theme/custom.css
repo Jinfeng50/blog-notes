@@ -34,3 +34,9 @@
     border-top: 1px solid var(--vp-c-divider);
     padding-top: 24px;
 }
+
+.comments {
+    margin-top: 48px;
+    padding-top: 24px;
+    border-top: 1px solid var(--vp-c-divider);
+}
