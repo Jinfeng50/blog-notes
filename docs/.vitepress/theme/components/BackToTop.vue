@@ -1,8 +1,10 @@
 <script setup lang="ts">
-import { inBrowser } from 'vitepress'
+import { inBrowser, useRoute } from 'vitepress'
 import { onBeforeUnmount, onMounted, ref } from 'vue'
+import { watch } from 'vue'
 
 const visible = ref(false)
+const route = useRoute()
 
 const updateVisible = () => {
   if (!inBrowser) return
@@ -21,6 +23,11 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
   window.removeEventListener('scroll', updateVisible)
+})
+
+watch(() => route.path, () => {
+  visible.value = false
+  if (inBrowser) window.requestAnimationFrame(updateVisible)
 })
 </script>
 

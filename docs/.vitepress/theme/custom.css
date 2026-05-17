@@ -389,11 +389,9 @@
 }
 
 .article-meta {
-    margin-bottom: 28px;
-    padding: 16px 18px;
-    border: 1px solid var(--vp-c-divider);
-    border-radius: 14px;
-    background: var(--vp-c-bg-soft);
+    margin: -4px 0 28px;
+    padding: 0 0 18px;
+    border-bottom: 1px solid var(--vp-c-divider);
 }
 
 .article-summary {
@@ -417,6 +415,11 @@
     color: var(--vp-c-brand-1);
     font-size: 12px;
     font-weight: 600;
+}
+
+.article-tag.muted {
+    background: transparent;
+    color: var(--vp-c-text-3);
 }
 
 .tag-cloud {
