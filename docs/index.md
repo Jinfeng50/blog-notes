@@ -32,6 +32,7 @@ hero:
     <a href="/notes/git">Git</a>
     <a href="/notes/linux">Linux</a>
     <a href="/notes/ai">AI</a>
+    <a href="/archive">归档</a>
     <a href="/projects">项目实践</a>
     <a href="/tags">全部标签</a>
   </div>

@@ -22,6 +22,7 @@ const calendarDays = [
 
 const indexes = [
   { text: '全部笔记', link: '/notes/' },
+  { text: '时间归档', link: '/archive' },
   { text: '标签索引', link: '/tags' },
   { text: '项目实践', link: '/projects' },
   { text: '关于本站', link: '/about' }

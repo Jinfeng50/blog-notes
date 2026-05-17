@@ -13,7 +13,11 @@ export default defineConfig( {
   },
 
   head: [
-    ['link', { rel: 'icon', href: '/favicon.svg' }]
+    ['link', { rel: 'icon', href: '/favicon.svg' }],
+    ['meta', { name: 'theme-color', content: '#f8f7f4' }],
+    ['meta', { property: 'og:title', content: 'Jinfeng 笔记' }],
+    ['meta', { property: 'og:description', content: '技术笔记、工程实践和 AI 学习记录' }],
+    ['meta', { property: 'og:type', content: 'website' }]
   ],
 
   themeConfig: {
@@ -21,6 +25,7 @@ export default defineConfig( {
 
     nav: [
       { text: '笔记', link: '/notes/' },
+      { text: '归档', link: '/archive' },
       { text: '标签', link: '/tags' },
       { text: '项目', link: '/projects' },
       { text: '关于', link: '/about' }

@@ -1,8 +1,11 @@
 ﻿:root {
-    --vp-c-brand-1: #6b7cff;
-    --vp-c-brand-2: #5c6ee8;
-    --vp-c-brand-3: #4f5fc7;
-    --vp-c-brand-soft: rgba(107, 124, 255, 0.14);
+    --vp-c-brand-1: #52616f;
+    --vp-c-brand-2: #667789;
+    --vp-c-brand-3: #3f4b57;
+    --vp-c-brand-soft: rgba(82, 97, 111, 0.1);
+    --vp-c-bg: #fbfaf7;
+    --vp-c-bg-alt: #f4f2ed;
+    --vp-c-bg-soft: #f7f5f0;
     --vp-layout-max-width: 1540px;
     --home-content-width: 1120px;
     --vp-sidebar-width: 224px;
@@ -18,11 +21,14 @@
 }
 
 .dark {
-    --vp-c-bg: #0b0d12;
-    --vp-c-bg-alt: #11131a;
-    --vp-c-bg-soft: #171a23;
-    --vp-c-border: #272b38;
-    --vp-c-brand-soft: rgba(123, 137, 255, 0.16);
+    --vp-c-bg: #101214;
+    --vp-c-bg-alt: #171a1d;
+    --vp-c-bg-soft: #1d2024;
+    --vp-c-border: #2b3035;
+    --vp-c-brand-1: #aab4bf;
+    --vp-c-brand-2: #919daa;
+    --vp-c-brand-3: #c0c8d0;
+    --vp-c-brand-soft: rgba(170, 180, 191, 0.12);
 }
 
 .VPHero .name {
@@ -66,7 +72,7 @@
     top: 0;
     left: 0;
     height: 2px;
-    background: linear-gradient(90deg, var(--vp-c-brand-2), var(--vp-c-brand-1));
+    background: var(--vp-c-brand-1);
     transition: width 0.12s ease-out;
 }
 
@@ -83,9 +89,7 @@
     padding: 28px;
     border: 1px solid var(--vp-c-divider);
     border-radius: 24px;
-    background:
-        radial-gradient(circle at top left, var(--vp-c-brand-soft), transparent 34%),
-        var(--vp-c-bg-soft);
+    background: var(--vp-c-bg-soft);
 }
 
 .profile-card h2 {
@@ -356,6 +360,28 @@
     color: var(--vp-c-brand-1);
     font-size: 12px;
     font-weight: 600;
+}
+
+.tag-cloud {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 18px 0 30px;
+}
+
+.tag-cloud a {
+    padding: 6px 12px;
+    border: 1px solid var(--vp-c-divider);
+    border-radius: 999px;
+    color: var(--vp-c-text-2);
+    background: var(--vp-c-bg-soft);
+    font-size: 14px;
+    font-weight: 650;
+}
+
+.tag-cloud a:hover {
+    border-color: var(--vp-c-brand-1);
+    color: var(--vp-c-brand-1);
 }
 
 .aside-widgets {
