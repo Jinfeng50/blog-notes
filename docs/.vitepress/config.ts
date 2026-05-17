@@ -1,7 +1,7 @@
 import { defineConfig } from 'vitepress'
 
 export default defineConfig( {
-  base: '/bolg-notes/',
+  base: '/',
   title: 'Jinfeng Notes',
   description: 'Personal technical notes and essays',
 
