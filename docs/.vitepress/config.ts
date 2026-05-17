@@ -8,6 +8,9 @@ export default defineConfig( {
 
   cleanUrls: true,
   lastUpdated: true,
+  markdown: {
+    lineNumbers: true
+  },
 
   head: [
     ['link', { rel: 'icon', href: '/favicon.svg' }]
