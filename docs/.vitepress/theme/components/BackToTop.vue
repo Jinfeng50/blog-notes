@@ -13,7 +13,8 @@ const updateVisible = () => {
 
 const backToTop = () => {
   if (!inBrowser) return
-  window.scrollTo({ top: 0, behavior: 'smooth' })
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  window.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' })
 }
 
 onMounted(() => {

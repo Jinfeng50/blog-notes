@@ -81,8 +81,11 @@ watch(isDark, updateTheme)
     <p v-if="failed" class="comments-hint error">
       评论加载失败，请检查网络或确认 utterances 已授权当前仓库。
     </p>
+    <p v-else-if="loading" class="comments-hint">
+      正在加载 GitHub 评论…
+    </p>
     <p v-else-if="!loaded" class="comments-hint">
-      评论由 GitHub Issues 驱动。如果这里一直为空，请确认仓库已安装并授权 utterances。
+      评论由 GitHub Issues 驱动。首次评论前，请先确认仓库已安装并授权 utterances。
     </p>
     <div ref="container" />
   </section>
