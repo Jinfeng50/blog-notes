@@ -6,23 +6,23 @@ tags:
   - 版本控制
 ---
 
-# Git Notes
+# Git 工作流笔记
 
-## Undo last commit
+## 撤销最近一次提交
 
-Keep changes:
+保留工作区改动：
 
 ```bash
 git reset --soft HEAD~1
 ```
 
-Drop changes:
+丢弃工作区改动：
 
 ```bash
 git reset --hard HEAD~1
 ```
 
-## View remote
+## 查看远端仓库
 
 ```bash
 git remote -v

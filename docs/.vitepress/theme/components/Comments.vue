@@ -13,7 +13,7 @@ const utterancesTheme = () => (isDark.value ? 'github-dark' : 'github-light')
 
 const shouldShowComments = () => {
   if (frontmatter.value.comments === false) return false
-  return route.path !== '/'
+  return route.path.startsWith('/notes/') && route.path !== '/notes/'
 }
 
 const loadComments = async () => {

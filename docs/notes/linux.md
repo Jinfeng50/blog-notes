@@ -6,15 +6,15 @@ tags:
   - 命令行
 ---
 
-# Linux Notes
+# Linux 排障笔记
 
-## Check port
+## 检查端口
 
 ```bash
 lsof -i :3000
 ```
 
-## Kill process
+## 结束进程
 
 ```bash
 kill -9 PID

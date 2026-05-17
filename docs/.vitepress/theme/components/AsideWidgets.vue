@@ -38,6 +38,8 @@ const issueUrl = () => {
   const issueTitle = encodeURIComponent(route.path)
   return `https://github.com/Jinfeng50/blog-notes/issues?q=${issueTitle}`
 }
+
+const isArticlePage = () => route.path.startsWith('/notes/') && route.path !== '/notes/'
 </script>
 
 <template>
@@ -67,7 +69,7 @@ const issueUrl = () => {
       </a>
     </section>
 
-    <section class="aside-widget">
+    <section v-if="isArticlePage()" class="aside-widget">
       <h3>本文评论</h3>
       <a class="aside-link" :href="issueUrl()" target="_blank" rel="noreferrer">
         查看《{{ page.title }}》的讨论
