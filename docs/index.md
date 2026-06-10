@@ -22,7 +22,7 @@ hero:
       <p>这里不会追求大而全，更关注真实问题的定位、修复、复盘和长期维护。</p>
     </div>
     <div class="profile-stats">
-      <span><strong>3</strong> 篇笔记</span>
+      <span><strong>4</strong> 篇笔记</span>
       <span><strong>1</strong> 个归档</span>
       <span><strong>持续</strong> 更新</span>
     </div>
@@ -45,7 +45,17 @@ hero:
     <p>像技术日志一样记录上下文、命令、取舍和结论，方便以后快速回到现场。</p>
   </div>
 
-  <a class="post-row featured" href="/notes/linux">
+  <a class="post-row featured" href="/notes/pi05-libero-baseline">
+    <time>2026-06-10</time>
+    <div>
+      <h3>π0.5 LIBERO 评测复现</h3>
+      <p>记录在共享 A800 集群上复现 openpi 官方 LIBERO checkpoint baseline 的完整过程。</p>
+      <div class="post-tags"><span>Robotics</span><span>VLA</span><span>LIBERO</span></div>
+    </div>
+    <span>↗</span>
+  </a>
+
+  <a class="post-row" href="/notes/linux">
     <time>2026-05-17</time>
     <div>
       <h3>Linux 排障笔记</h3>

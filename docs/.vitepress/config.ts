@@ -39,7 +39,8 @@ export default defineConfig( {
             { text: '全部笔记', link: '/notes/' },
             { text: 'Git', link: '/notes/git' },
             { text: 'Linux', link: '/notes/linux' },
-            { text: 'AI', link: '/notes/ai' }
+            { text: 'AI', link: '/notes/ai' },
+            { text: 'π0.5 LIBERO 评测复现', link: '/notes/pi05-libero-baseline' }
           ]
         }
       ]

@@ -4,6 +4,10 @@
 
 ## 2026
 
+### 06 月
+
+- [π0.5 LIBERO 评测复现](./notes/pi05-libero-baseline) — 共享 A800 集群上复现 openpi 官方 LIBERO checkpoint baseline
+
 ### 05 月
 
 - [Linux 排障笔记](./notes/linux) — 端口、进程和命令行排障片段

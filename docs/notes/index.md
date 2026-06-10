@@ -7,3 +7,4 @@
 - [Git](./git)
 - [Linux](./linux)
 - [AI](./ai)
+- [π0.5 LIBERO 评测复现](./pi05-libero-baseline)

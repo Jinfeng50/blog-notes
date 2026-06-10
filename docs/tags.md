@@ -14,6 +14,11 @@
   <a href="#学习记录">学习记录</a>
   <a href="#项目">项目</a>
   <a href="#工程实践">工程实践</a>
+  <a href="#robotics">Robotics</a>
+  <a href="#vla">VLA</a>
+  <a href="#libero">LIBERO</a>
+  <a href="#openpi">openpi</a>
+  <a href="#实验复现">实验复现</a>
 </div>
 
 ## Git
@@ -59,3 +64,23 @@
 ## 工程实践
 
 - [项目实践整理](./projects) `项目` `工程实践`
+
+## Robotics
+
+- [π0.5 LIBERO 评测复现](./notes/pi05-libero-baseline) `Robotics` `VLA` `LIBERO` `openpi` `实验复现`
+
+## VLA
+
+- [π0.5 LIBERO 评测复现](./notes/pi05-libero-baseline) `Robotics` `VLA` `LIBERO` `openpi` `实验复现`
+
+## LIBERO
+
+- [π0.5 LIBERO 评测复现](./notes/pi05-libero-baseline) `Robotics` `VLA` `LIBERO` `openpi` `实验复现`
+
+## openpi
+
+- [π0.5 LIBERO 评测复现](./notes/pi05-libero-baseline) `Robotics` `VLA` `LIBERO` `openpi` `实验复现`
+
+## 实验复现
+
+- [π0.5 LIBERO 评测复现](./notes/pi05-libero-baseline) `Robotics` `VLA` `LIBERO` `openpi` `实验复现`
