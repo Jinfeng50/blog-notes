@@ -204,6 +204,26 @@ libero_10,0.926,500
 
 这个结果和 openpi 官方 README 基本一致。平均只差 0.25 个百分点，在仿真随机性和运行环境差异下可以接受。
 
+LIBERO-Spatial成功案例展示：
+<video controls muted playsinline preload="metadata" width="100%">
+    <source src="/media/pi05-libero-baseline/rollout_pick_up_the_black_bowl_from_table_center_and_place_it_on_the_plate_success.mp4" type="video/mp4">
+  </video>
+
+LIBERO-Object成功案例展示：
+<video controls muted playsinline preload="metadata" width="100%">
+    <source src="/media/pi05-libero-baseline/rollout_pick_up_the_alphabet_soup_and_place_it_in_the_basket_success.mp4" type="video/mp4">
+  </video>
+
+LIBERO-long成功案例展示：
+<video controls muted playsinline preload="metadata" width="100%">
+    <source src="/media/pi05-libero-baseline/rollout_pick_up_the_book_and_place_it_in_the_back_compartment_of_the_caddy_success.mp4" type="video/mp4">
+  </video>
+
+失败案例展示：
+<video controls muted playsinline preload="metadata" width="100%">
+    <source src="/media/pi05-libero-baseline/rollout_put_the_white_mug_on_the_left_plate_and_put_the_yellow_and_white_mug_on_the_right_plate_failure.mp4" type="video/mp4">
+  </video>
+
 ## 踩坑记录
 
 ### 10 episodes/task 不能作为正式 baseline
@@ -353,141 +373,6 @@ Average:   96.60
 
 ---
 
-## 媒体素材和发布建议
-
-如果要把图片、视频和文章一起发布，不能直接引用 `/cfsdata/...` 这类服务器绝对路径。需要先把素材复制到本仓库的 `docs/public/media/pi05-libero-baseline/`，再在文章里用站点路径引用，例如 `/media/pi05-libero-baseline/result.png`。
-
-图片使用 Markdown 语法：
-
-```md
-![π0.5 LIBERO evaluation pipeline](/media/pi05-libero-baseline/pipeline.png)
-```
-
-视频使用 HTML 的 `video` 标签：
-
-```html
-<video controls muted playsinline preload="metadata" width="100%">
-  <source src="/media/pi05-libero-baseline/libero-spatial-success.mp4" type="video/mp4">
-  当前浏览器不支持 video 标签。
-</video>
-```
-
-如果视频较大，建议转成体积更小的 MP4 或 GIF 后再提交到仓库。GitHub 普通仓库不适合长期存放很大的视频文件，单个素材尽量控制在几十 MB 以内。
-
-下面是发布知乎/CSDN时建议插入的素材。知乎建议 5-7 张图 + 2-3 个视频/GIF，CSDN 可以多放命令截图和日志截图。
-
-## 图 1：项目结构图
-
-建议内容：
-
-- 左边：`openpi policy server`
-- 中间：`websocket`
-- 右边：`LIBERO eval client`
-- 下方：`pi05_libero checkpoint`、`LIBERO simulator`、`A800 GPU`
-
-用途：放在第 1 或第 3 节，帮助读者理解 server-client 架构。
-
-可以自己用 draw.io / excalidraw 画，标题写：
-
-```text
-openpi π0.5 LIBERO evaluation pipeline
-```
-
-## 图 2：A800 环境截图
-
-建议截图命令：
-
-```bash
-nvidia-smi
-```
-
-或者用已有环境快照里的 GPU 部分：
-
-```text
-/cfsdata/chenjinfeng/projects/openpi-libero-reproduction/docs/env_snapshot.md
-```
-
-用途：放在第 2 节，说明这是共享 A800 集群环境。
-
-## 图 3：官方协议结果表
-
-建议直接截图 `docs/baseline.md` 里的表格，或者用 Markdown 表格原样放文中：
-
-```text
-Spatial 98.2 / Object 98.8 / Goal 96.8 / Libero 10 92.6 / Average 96.60
-```
-
-用途：放在第 6 节开头，这是文章最重要的结果图。
-
-## 图 4：日志完成截图
-
-建议截图以下命令输出：
-
-```bash
-cat /cfsdata/chenjinfeng/projects/openpi-libero-reproduction/experiments/baseline_official_50ep_20260607_1246/sr_summary.csv
-```
-
-也可以截每个 log 末尾的：
-
-```text
-Total success rate: ...
-Total episodes: 500
-```
-
-用途：强调这不是 10ep sanity check，而是完整 500 episodes/suite。
-
-## 图 5：踩坑日志截图
-
-建议截图 websocket timeout 的错误片段：
-
-```text
-keepalive ping failed
-ConnectionClosedError: sent 1011 internal error keepalive ping timeout
-Success: False
-```
-
-用途：放在第 7.3 节，说明 success 全 0 的真实原因。
-
-## 视频 1：LIBERO-Spatial 成功案例
-
-路径：
-
-```text
-/cfsdata/chenjinfeng/datasets/eval_videos/baseline_official_50ep_20260607_1246/libero_spatial/rollout_pick_up_the_black_bowl_between_the_plate_and_the_ramekin_and_place_it_on_the_plate_success.mp4
-```
-
-用途：放在文章开头或第 6 节。
-
-## 视频 2：LIBERO-Object 成功案例
-
-路径：
-
-```text
-/cfsdata/chenjinfeng/datasets/eval_videos/baseline_official_50ep_20260607_1246/libero_object/rollout_pick_up_the_orange_juice_and_place_it_in_the_basket_success.mp4
-```
-
-用途：展示物体抓取和放置任务。
-
-## 视频 3：LIBERO-Long 成功案例
-
-路径：
-
-```text
-/cfsdata/chenjinfeng/datasets/eval_videos/baseline_official_50ep_20260607_1246/libero_10/rollout_put_both_the_cream_cheese_box_and_the_butter_in_the_basket_success.mp4
-```
-
-用途：展示长程多物体任务，最适合做文章封面动图。
-
-## 视频 4：失败案例
-
-路径：
-
-```text
-/cfsdata/chenjinfeng/datasets/eval_videos/baseline_official_50ep_20260607_1246/libero_10/rollout_put_the_white_mug_on_the_plate_and_put_the_chocolate_pudding_to_the_right_of_the_plate_failure.mp4
-```
-
-用途：放在 failure analysis 或踩坑部分，说明即使官方 checkpoint 在长程任务上也仍有失败样本。
-
 ## 生成 GIF 的命令
 
 如果平台不方便直接上传 mp4，可以把视频转成 GIF：
@@ -496,13 +381,6 @@ Success: False
 ffmpeg -i /cfsdata/chenjinfeng/datasets/eval_videos/baseline_official_50ep_20260607_1246/libero_10/rollout_put_both_the_cream_cheese_box_and_the_butter_in_the_basket_success.mp4 \
     -vf "fps=10,scale=480:-1:flags=lanczos" \
     -loop 0 /cfsdata/chenjinfeng/projects/blogs/pi05_libero_long_success.gif
-```
-
-也可以截第一帧当封面：
-
-```bash
-ffmpeg -i /cfsdata/chenjinfeng/datasets/eval_videos/baseline_official_50ep_20260607_1246/libero_10/rollout_put_both_the_cream_cheese_box_and_the_butter_in_the_basket_success.mp4 \
-    -frames:v 1 /cfsdata/chenjinfeng/projects/blogs/pi05_libero_cover.png
 ```
 
 ## 参考
