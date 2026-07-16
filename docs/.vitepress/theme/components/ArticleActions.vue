@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { inBrowser, useRoute } from 'vitepress'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
+import { data as posts } from '../posts.data'
 
 const route = useRoute()
 const copied = ref(false)
@@ -12,11 +13,19 @@ const editUrl = () => {
 
 const isArticlePage = () => route.path.startsWith('/notes/') && route.path !== '/notes/'
 
-const relatedPosts = () => [
-  { title: 'Git 工作流笔记', link: '/notes/git', desc: '版本控制与协作命令' },
-  { title: 'Linux 排障笔记', link: '/notes/linux', desc: '端口、进程和命令行' },
-  { title: 'AI 学习记录', link: '/notes/ai', desc: '模型能力和提示词实践' }
-].filter((post) => post.link !== route.path).slice(0, 2)
+const relatedPosts = computed(() => {
+  const current = posts.find((post) => post.url === route.path)
+  const currentTags = new Set(current?.tags ?? [])
+
+  return posts
+    .filter((post) => post.url !== route.path)
+    .map((post) => ({
+      ...post,
+      score: post.tags.filter((tag) => currentTags.has(tag)).length
+    }))
+    .sort((a, b) => b.score - a.score || b.date.localeCompare(a.date))
+    .slice(0, 2)
+})
 
 const copyLink = async () => {
   if (!inBrowser) return
@@ -46,10 +55,10 @@ const copyLink = async () => {
       </div>
     </div>
 
-    <div class="related-posts">
-      <a v-for="post in relatedPosts()" :key="post.link" :href="post.link">
+    <div v-if="relatedPosts.length" class="related-posts">
+      <a v-for="post in relatedPosts" :key="post.url" :href="post.url">
         <span>{{ post.title }}</span>
-        <small>{{ post.desc }}</small>
+        <small>{{ post.summary }}</small>
       </a>
     </div>
   </section>

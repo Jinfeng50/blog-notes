@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useData, useRoute } from 'vitepress'
+import { data as posts } from '../posts.data'
 
 const route = useRoute()
 const { page } = useData()
@@ -28,11 +29,7 @@ const indexes = [
   { text: '关于本站', link: '/about' }
 ]
 
-const hotPosts = [
-  { text: 'Linux 排障笔记', link: '/notes/linux', meta: 'Linux / 排障' },
-  { text: 'Git 工作流笔记', link: '/notes/git', meta: 'Git / 效率' },
-  { text: 'AI 学习记录', link: '/notes/ai', meta: 'AI / 模型' }
-]
+const latestPosts = posts.slice(0, 3)
 
 const issueUrl = () => {
   const issueTitle = encodeURIComponent(route.path)
@@ -57,15 +54,15 @@ const isArticlePage = () => route.path.startsWith('/notes/') && route.path !== '
     </section>
 
     <section class="aside-widget">
-      <h3>热门文章</h3>
+      <h3>最新文章</h3>
       <a
-        v-for="item in hotPosts"
-        :key="item.link"
+        v-for="item in latestPosts"
+        :key="item.url"
         class="aside-link aside-post"
-        :href="item.link"
+        :href="item.url"
       >
-        <span>{{ item.text }}</span>
-        <small>{{ item.meta }}</small>
+        <span>{{ item.title }}</span>
+        <small>{{ item.tags.slice(0, 2).join(' / ') }}</small>
       </a>
     </section>
 

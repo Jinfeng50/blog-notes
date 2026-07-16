@@ -5,6 +5,10 @@ export default defineConfig( {
   base: '/',
   title: 'Jinfeng 笔记',
   description: '技术笔记、想法和实践记录',
+  sitemap: {
+    hostname: 'https://notes.chenjinfeng.com',
+    transformItems: (items) => items.filter((item) => item.url.replace(/^\//, '') !== '404')
+  },
 
   cleanUrls: true,
   lastUpdated: true,
@@ -37,10 +41,8 @@ export default defineConfig( {
           text: '笔记',
           items: [
             { text: '全部笔记', link: '/notes/' },
-            { text: 'Git', link: '/notes/git' },
-            { text: 'Linux', link: '/notes/linux' },
-            { text: 'AI', link: '/notes/ai' },
-            { text: 'π0.5 LIBERO 评测复现', link: '/notes/pi05-libero-baseline' }
+            { text: '时间归档', link: '/archive' },
+            { text: '标签索引', link: '/tags' }
           ]
         }
       ]

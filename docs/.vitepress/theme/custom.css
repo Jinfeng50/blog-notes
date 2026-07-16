@@ -337,6 +337,73 @@
     font-size: 12px;
     vertical-align: middle;
 }
+
+.post-rows {
+    display: grid;
+    width: 100%;
+}
+
+.content-empty {
+    margin: 24px 0;
+    padding: 18px;
+    border: 1px dashed var(--vp-c-divider);
+    border-radius: 8px;
+    color: var(--vp-c-text-2);
+    background: var(--vp-c-bg-soft);
+}
+
+.archive-list,
+.tag-group {
+    display: grid;
+    gap: 0;
+}
+
+.archive-group {
+    margin-top: 28px;
+}
+
+.archive-group h2,
+.tag-group h2 {
+    margin: 0;
+    padding: 0 0 12px;
+    border: 0;
+    font-size: 20px;
+}
+
+.archive-row {
+    display: grid;
+    grid-template-columns: 48px minmax(0, 1fr);
+    gap: 18px;
+    padding: 18px 0;
+    border-top: 1px solid var(--vp-c-divider);
+    color: inherit;
+    text-decoration: none;
+}
+
+.archive-row time {
+    color: var(--vp-c-text-3);
+    font-family: var(--vp-font-family-mono);
+    font-size: 13px;
+}
+
+.archive-row span,
+.archive-row small {
+    display: block;
+}
+
+.archive-row strong {
+    color: var(--vp-c-text-1);
+}
+
+.archive-row small {
+    margin-top: 5px;
+    color: var(--vp-c-text-2);
+    line-height: 1.6;
+}
+
+.archive-row:hover strong {
+    color: var(--vp-c-brand-1);
+}
 .vp-doc code {
     font-size: 0.92em;
 }
@@ -665,6 +732,38 @@ a.article-tag:hover {
     color: var(--vp-c-brand-1);
 }
 
+.tag-cloud small {
+    margin-left: 4px;
+    color: var(--vp-c-text-3);
+}
+
+.tag-group {
+    margin-top: 30px;
+    scroll-margin-top: 88px;
+}
+
+.tag-post {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 0;
+    border-top: 1px solid var(--vp-c-divider);
+    color: var(--vp-c-text-1);
+    text-decoration: none;
+}
+
+.tag-post span {
+    flex: 0 0 auto;
+    color: var(--vp-c-text-3);
+    font-family: var(--vp-font-family-mono);
+    font-size: 12px;
+}
+
+.tag-post:hover strong {
+    color: var(--vp-c-brand-1);
+}
+
 .aside-widgets {
     display: grid;
     gap: 16px;
@@ -748,6 +847,15 @@ a.article-tag:hover {
 
     .topic-strip {
         grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .archive-row {
+        grid-template-columns: 38px minmax(0, 1fr);
+        gap: 12px;
+    }
+
+    .tag-post {
+        align-items: flex-start;
     }
 
     .topic-strip a {

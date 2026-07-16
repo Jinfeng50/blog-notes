@@ -1,16 +1,20 @@
 <script setup lang="ts">
-import { useData } from 'vitepress'
+import { useData, useRoute } from 'vitepress'
 import { computed } from 'vue'
+import { tagSlug } from '../content'
+import { data as posts } from '../posts.data'
 
 const { frontmatter, page } = useData()
+const route = useRoute()
 
 const readingTime = computed(() => {
-  const wordCount = page.value?.frontmatter?.wordCount
+  const post = posts.find((item) => item.url === route.path)
+  const wordCount = post?.wordCount ?? page.value?.frontmatter?.wordCount
   if (typeof wordCount === 'number') return `${Math.max(1, Math.ceil(wordCount / 400))} 分钟阅读`
   return '短文'
 })
 
-const tagLink = (tag: string) => `/tags#${encodeURIComponent(tag.toLowerCase().replace(/\s+/g, '-'))}`
+const tagLink = (tag: string) => `/tags#${tagSlug(tag)}`
 </script>
 
 <template>

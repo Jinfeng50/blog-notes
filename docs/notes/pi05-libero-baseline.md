@@ -1,4 +1,5 @@
 ---
+title: π0.5 LIBERO 评测复现
 summary: 在共享 8×A800-80GB 集群上复现 openpi π0.5 官方 LIBERO checkpoint baseline，记录评测协议、命令、结果和踩坑。
 tags:
   - Robotics
@@ -90,12 +91,15 @@ openpi 的推理是 server-client 架构。先启动 policy server，加载模�
 我使用 8001 端口，因为当时 8000 已经被其他进程占用。
 
 ```bash
-cd /chenjinfeng/projects/openpi
+export WORKSPACE=/path/to/your/workspace
+export DATA_ROOT=/path/to/your/data
 
-export OPENPI_DATA_HOME=/chenjinfeng/openpi_cache
-export HF_HOME=/chenjinfeng/hf_cache
-export HF_LEROBOT_HOME=/chenjinfeng/datasets
-export TMPDIR=/chenjinfeng/tmp
+cd "$WORKSPACE/openpi"
+
+export OPENPI_DATA_HOME="$DATA_ROOT/openpi_cache"
+export HF_HOME="$DATA_ROOT/hf_cache"
+export HF_LEROBOT_HOME="$DATA_ROOT/datasets"
+export TMPDIR="$DATA_ROOT/tmp"
 export MUJOCO_GL=egl
 export XLA_PYTHON_CLIENT_MEM_FRACTION=0.9
 
@@ -103,7 +107,7 @@ CUDA_VISIBLE_DEVICES=5 uv run scripts/serve_policy.py \
     --port=8001 \
     policy:checkpoint \
     --policy.config=pi05_libero \
-    --policy.dir=/cfsdata/chenjinfeng/models/openpi/pi05_libero
+    --policy.dir="$DATA_ROOT/models/openpi/pi05_libero"
 ```
 
 这里有一个小细节：`--port=8001` 必须放在 `policy:checkpoint` 子命令前面。因为 openpi 用的是 `tyro` 解析命令行，子命令后面的参数会被解析成 checkpoint 子命令自己的参数。如果写成下面这样会报错：
@@ -129,24 +133,27 @@ uv run scripts/serve_policy.py --port=8001 policy:checkpoint ...
 eval 端需要能 import LIBERO。我的 `openpi/third_party/libero` 当时是空的，所以需要显式把 LIBERO 源码加进 `PYTHONPATH`：
 
 ```bash
-export PYTHONPATH=/chenjinfeng/projects/LIBERO:$PYTHONPATH
+export PYTHONPATH="$WORKSPACE/LIBERO:$PYTHONPATH"
 ```
 
 完整评测命令如下：
 
 ```bash
-cd /chenjinfeng/projects/openpi/examples/libero
+export WORKSPACE=/path/to/your/workspace
+export DATA_ROOT=/path/to/your/data
 
-export OPENPI_DATA_HOME=/chenjinfeng/openpi_cache
-export HF_HOME=/chenjinfeng/hf_cache
-export HF_LEROBOT_HOME=/chenjinfeng/datasets
-export TMPDIR=/chenjinfeng/tmp
+cd "$WORKSPACE/openpi/examples/libero"
+
+export OPENPI_DATA_HOME="$DATA_ROOT/openpi_cache"
+export HF_HOME="$DATA_ROOT/hf_cache"
+export HF_LEROBOT_HOME="$DATA_ROOT/datasets"
+export TMPDIR="$DATA_ROOT/tmp"
 export MUJOCO_GL=egl
-export PYTHONPATH=/chenjinfeng/projects/LIBERO:$PYTHONPATH
+export PYTHONPATH="$WORKSPACE/LIBERO:$PYTHONPATH"
 
 RUN_ID=baseline_official_50ep_$(date +%Y%m%d_%H%M)
-RESULTS=/chenjinfeng/projects/openpi-libero-reproduction/experiments/$RUN_ID
-VIDEOS=chenjinfeng/datasets/eval_videos/$RUN_ID
+RESULTS="$WORKSPACE/openpi-libero-reproduction/experiments/$RUN_ID"
+VIDEOS="$DATA_ROOT/datasets/eval_videos/$RUN_ID"
 mkdir -p "$RESULTS" "$VIDEOS"
 
 for SUITE in libero_spatial libero_object libero_goal libero_10
@@ -256,13 +263,13 @@ ModuleNotFoundError: No module named 'libero'
 原因是 eval 端的 Python 环境没有找到 LIBERO 包。我的解决方式是：
 
 ```bash
-export PYTHONPATH=/cfsdata/chenjinfeng/projects/LIBERO:$PYTHONPATH
+export PYTHONPATH="$WORKSPACE/LIBERO:$PYTHONPATH"
 ```
 
 如果是从头搭环境，也可以考虑：
 
 ```bash
-uv pip install -e /cfsdata/chenjinfeng/projects/LIBERO
+uv pip install -e "$WORKSPACE/LIBERO"
 ```
 
 但为了避免修改太多环境状态，我这次采用了显式 `PYTHONPATH`。
@@ -344,19 +351,19 @@ Total episodes: 500
 结果文档：
 
 ```text
-/cfsdata/chenjinfeng/projects/openpi-libero-reproduction/docs/baseline.md
+/path/to/your/workspace/openpi-libero-reproduction/docs/baseline.md
 ```
 
 完整日志：
 
 ```text
-/cfsdata/chenjinfeng/projects/openpi-libero-reproduction/experiments/baseline_official_50ep_20260607_1246
+/path/to/your/workspace/openpi-libero-reproduction/experiments/baseline_official_50ep_20260607_1246
 ```
 
 视频目录：
 
 ```text
-/cfsdata/chenjinfeng/datasets/eval_videos/baseline_official_50ep_20260607_1246
+/path/to/your/data/datasets/eval_videos/baseline_official_50ep_20260607_1246
 ```
 
 核心结果：
@@ -378,9 +385,9 @@ Average:   96.60
 如果平台不方便直接上传 mp4，可以把视频转成 GIF：
 
 ```bash
-ffmpeg -i /cfsdata/chenjinfeng/datasets/eval_videos/baseline_official_50ep_20260607_1246/libero_10/rollout_put_both_the_cream_cheese_box_and_the_butter_in_the_basket_success.mp4 \
+ffmpeg -i /path/to/your/data/datasets/eval_videos/baseline_official_50ep_20260607_1246/libero_10/rollout_put_both_the_cream_cheese_box_and_the_butter_in_the_basket_success.mp4 \
     -vf "fps=10,scale=480:-1:flags=lanczos" \
-    -loop 0 /cfsdata/chenjinfeng/projects/blogs/pi05_libero_long_success.gif
+    -loop 0 /path/to/output/pi05_libero_long_success.gif
 ```
 
 ## 参考

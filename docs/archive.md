@@ -1,21 +1,14 @@
-# 归档
+---
+title: 文章归档
+comments: false
+---
 
-按时间整理所有公开笔记和页面，方便从时间线回溯问题现场。
+<script setup>
+import ArchiveList from './.vitepress/theme/components/ArchiveList.vue'
+</script>
 
-## 2026
+# 文章归档
 
-### 06 月
+按发布时间整理所有公开笔记，方便从时间线回溯问题现场。
 
-- [π0.5 LIBERO 评测复现](./notes/pi05-libero-baseline) — 共享 A800 集群上复现 openpi 官方 LIBERO checkpoint baseline
-
-### 05 月
-
-- [Linux 排障笔记](./notes/linux) — 端口、进程和命令行排障片段
-- [Git 工作流笔记](./notes/git) — 常用撤销、远端和协作命令
-- [AI 学习记录](./notes/ai) — 模型能力、提示词和实践观察
-- [项目实践整理](./projects) — 小工具、自动化脚本和实验项目
-
-## 索引
-
-- [全部笔记](./notes/)
-- [标签索引](./tags)
+<ArchiveList />

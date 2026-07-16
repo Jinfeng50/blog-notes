@@ -1,10 +1,14 @@
-# 笔记
+---
+title: 全部笔记
+comments: false
+---
 
-这里整理值得反复查阅的技术片段、排障记录和学习笔记。
+<script setup>
+import NotesList from '../.vitepress/theme/components/NotesList.vue'
+</script>
 
-## 分类
+# 全部笔记
 
-- [Git](./git)
-- [Linux](./linux)
-- [AI](./ai)
-- [π0.5 LIBERO 评测复现](./pi05-libero-baseline)
+这里整理值得反复查阅的技术片段、排障记录和学习笔记。列表会根据 `docs/notes` 中实际存在的文章自动更新。
+
+<NotesList />
