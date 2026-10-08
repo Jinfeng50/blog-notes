@@ -1,3 +1,14 @@
+---
+title: PI 系列技术解读
+summary: 梳理 Physical Intelligence 系列工作的模型架构、训练方法、记忆机制、强化学习与动作执行。
+tags:
+  - Robotics
+  - VLA
+  - 强化学习
+date: 2026-10-08
+comments: true
+---
+
 # PI 系列技术解读
 
 对于具身智能这个行业来说，不得不提到一个公司，那就是大名鼎鼎的[Physical Intelligence](https://www.pi.website/)，简称[PI](https://www.pi.website/)。这个公司所做的一些工作探索和模型路径，算是具身智能浪潮下的一个缩影，从一开始的大语言模型的注入，将连续动作和视觉语言理解连接起来，到解决数据可用性、任务泛化性，最后研究如何提高学习能力、如何涌现智能，PI公司都做了大大小小很多探索。论文、实机实验与部分开源实现，让这些问题有了可检验、可借鉴的具体方案。
@@ -121,7 +132,7 @@ $$
 
 ![π0：视觉语言骨干与动作专家](/media/pi-series-technical-analysis/pi0-fig3-architecture.png)
 
-*π0：视觉语言骨干与动作专家。来源：[[π0] A Vision-Language-Action Flow Model for General Robot Control](../%23paper/%5B%CF%800%5D%20A%20Vision-Language-Action%20Flow%20Model%20for%20General%20Robot%20Control.pdf#page=4)，原论文图 3，PDF 第 4 页。截取原图及图注，未改动图中内容。*
+*π0：视觉语言骨干与动作专家。来源：[π0] A Vision-Language-Action Flow Model for General Robot Control，原论文图 3，PDF 第 4 页。截取原图及图注，未改动图中内容。*
 
 **读图：** 先看中间蓝色骨干和右侧绿色动作专家：图像与任务文字进入骨干，状态与噪声进入动作分支，顶部输出连续动作。左侧说明训练数据来源，最右侧说明同一框架面向不同机器人身体。
 
@@ -226,7 +237,7 @@ FAST 的输出是一段离散动作符号，模型可以像预测文本一样学
 
 ![FAST：从连续动作到压缩 token](/media/pi-series-technical-analysis/fast-fig4-tokenization.png)
 
-*FAST：从连续动作到压缩 token。来源：[[FAST] Efficient Action Tokenization for Vision-Language-Action Models](../%23paper/%5BFAST%5D%20Efficient%20Action%20Tokenization%20for%20Vision-Language-Action%20Models.pdf#page=5)，原论文图 4，PDF 第 5 页。截取原图及图注，未改动图中内容。*
+*FAST：从连续动作到压缩 token。来源：[FAST] Efficient Action Tokenization for Vision-Language-Action Models，原论文图 4，PDF 第 5 页。截取原图及图注，未改动图中内容。*
 
 **读图：** 按编号 1→5 阅读：动作曲线经过 DCT 变成频率系数，量化为整数后展平，最后由 BPE 合并常见序列。图中压缩发生在表示与编码阶段，后文公式分别对应这些步骤。
 
@@ -281,7 +292,7 @@ $$
 
 ![知识隔离：信息读取与梯度截断](/media/pi-series-technical-analysis/ki-fig1-gradient-isolation.png)
 
-*知识隔离：信息读取与梯度截断。来源：[[Knowledge Insulating Vision-Language-Action Models] Train Fast, Run Fast, Generalize Better](../%23paper/%5BKnowledge%20Insulating%20Vision-Language-Action%20Models%5D%20Train%20Fast%2C%20Run%20Fast%2C%20Generalize%20Better.pdf#page=2)，原论文图 1，PDF 第 2 页。截取原图及图注，未改动图中内容。*
+*知识隔离：信息读取与梯度截断。来源：[Knowledge Insulating Vision-Language-Action Models] Train Fast, Run Fast, Generalize Better，原论文图 1，PDF 第 2 页。截取原图及图注，未改动图中内容。*
 
 **读图：** 左侧骨干学习语言和离散动作，右侧专家学习连续动作。中间箭头保留骨干到专家的信息传递，stop gradient 标记阻断连续动作损失沿该路径更新骨干；骨干仍接受自己的 token 监督。
 
@@ -347,9 +358,9 @@ RMSNorm 按向量均方根调整尺度；adaRMS 的调制参数依赖条件，�
 
 因此，流匹配推理的多步积分无需完整展开成每次训练的计算图；训练可以直接采样中间状态来学习速度。FAST 在训练时能并行计算多个位置的损失，推理时仍然受顺序生成影响。这些差异解释了为什么训练效率和部署延迟需要分别比较。
 
-KI 则进一步利用两条路径各自的作用：离散动作给共享表示提供机器人监督，连续专家提供运行时的生成接口。这个联系可以沿着 [Pi0 的损失与采样实现](../openpi/src/openpi/models/pi0.py)、[Pi0FAST 的 token 预测实现](../openpi/src/openpi/models/pi0_fast.py)继续核对，具体调用顺序见[源码部分](#七源码贯通从数据配置到控制接口)。
+KI 则进一步利用两条路径各自的作用：离散动作给共享表示提供机器人监督，连续专家提供运行时的生成接口。这个联系可以沿着 [Pi0 的损失与采样实现](https://github.com/Physical-Intelligence/openpi/blob/main/src/openpi/models/pi0.py)、[Pi0FAST 的 token 预测实现](https://github.com/Physical-Intelligence/openpi/blob/main/src/openpi/models/pi0_fast.py)继续核对，具体调用顺序见[源码部分](#七源码贯通从数据配置到控制接口)。
 
-依据：π0 方法章节；FAST 第 IV 至 VI 节；π0.5 第 IV 节与图 3；KI 第 4 至 6 节、式 (4) 至 (6)。见[来源 P01、P02、P03、P05](PI系列解读/13-来源与核验记录.md)。
+依据：π0 方法章节；FAST 第 IV 至 VI 节；π0.5 第 IV 节与图 3；KI 第 4 至 6 节、式 (4) 至 (6)。见来源 P01、P02、P03、P05。
 
 ## 三、训练组织：多种监督怎样进入共享模型
 
@@ -363,7 +374,7 @@ KI 则进一步利用两条路径各自的作用：离散动作给共享表示�
 
 ![π0.5：异构预训练与后训练](/media/pi-series-technical-analysis/pi05-fig3-training.png)
 
-*π0.5：异构预训练与后训练。来源：[[π0.5] A Vision-Language-Action Model with Open-World Generalization](../%23paper/%5B%CF%800.5%5D%20A%20Vision-Language-Action%20Model%20with%20Open-World%20Generalization.pdf#page=4)，原论文图 3，PDF 第 4 页。截取原图及图注，未改动图中内容。*
+*π0.5：异构预训练与后训练。来源：[π0.5] A Vision-Language-Action Model with Open-World Generalization，原论文图 3，PDF 第 4 页。截取原图及图注，未改动图中内容。*
 
 **读图：** 先看虚线左侧：多种数据被组织成离散预测任务。再看右侧：加入连续动作专家，高层产生子任务，低层据此生成动作。图展示原论文的两阶段配方，后续 KI 的联合训练需要另看其梯度设计。
 
@@ -446,7 +457,7 @@ $$
 
 因此，加入低质量数据的收益取决于它是否带来有用状态、恢复过程或其他信息，标签是否可信，以及模型能否分辨这些行为。π0.7 的相关实验研究的是其具体数据配方与上下文设计下的收益，结论仍需结合数据组成和消融来理解。
 
-依据：Hi Robot 第 4.3 节；π0.5 第 IV/V 节；KI 第 5 节；人类迁移第 IV/V 节及图 7/8；π0.7 第 V-C 节与数据实验。见[来源 P03、P04、P05、P09、P11](PI系列解读/13-来源与核验记录.md)。
+依据：Hi Robot 第 4.3 节；π0.5 第 IV/V 节；KI 第 5 节；人类迁移第 IV/V 节及图 7/8；π0.7 第 V-C 节与数据实验。见来源 P03、P04、P05、P09、P11。
 
 ## 四、条件组织：层级、记忆与目标怎样共同决定动作
 
@@ -487,7 +498,7 @@ MEM 沿用高低层分工来保存历史：高层读取并更新长期文字记�
 
 ![MEM：长期文字记忆与短期视频记忆](/media/pi-series-technical-analysis/mem-fig2-memory.png)
 
-*MEM：长期文字记忆与短期视频记忆。来源：[[MEM] Multi-Scale Embodied Memory for Vision Language Action Models](../%23paper/%5BMEM%5D%20Multi-Scale%20Embodied%20Memory%20for%20Vision%20Language%20Action%20Models.pdf#page=4)，原论文图 2，PDF 第 4 页。截取原图及图注，未改动图中内容。*
+*MEM：长期文字记忆与短期视频记忆。来源：[MEM] Multi-Scale Embodied Memory for Vision Language Action Models，原论文图 2，PDF 第 4 页。截取原图及图注，未改动图中内容。*
 
 **读图：** 左侧高层读取并更新文字记忆，同时输出子任务；虚线把子任务传给右侧低层。右下方视频编码器处理近期观测，再交给动作模型。两种记忆分别服务于任务阶段判断和局部运动。
 
@@ -532,7 +543,7 @@ $$
 
 ![π0.7：高层、世界模型与动作模型](/media/pi-series-technical-analysis/pi07-fig2-architecture.png)
 
-*π0.7：高层、世界模型与动作模型。来源：[[π0.7] A Steerable Generalist Robotic Foundation Model with Emergent Capabilities](../%23paper/%5B%CF%800.7%5D%20A%20Steerable%20Generalist%20Robotic%20Foundation%20Model%20with%20Emergent%20Capabilities.pdf#page=4)，原论文图 2，PDF 第 4 页。截取原图及图注，未改动图中内容。*
+*π0.7：高层、世界模型与动作模型。来源：[π0.7] A Steerable Generalist Robotic Foundation Model with Emergent Capabilities，原论文图 2，PDF 第 4 页。截取原图及图注，未改动图中内容。*
 
 **读图：** 先看下方：高层或人提供子任务，世界模型生成子目标图像。再看上方：动作模型同时读取历史、任务、子任务、目标图像和元数据，输出动作。三个大模块的输出不同，参数规模也应分别理解。
 
@@ -573,7 +584,7 @@ $$
 
 质量条件还需要可靠的评价来源。π0.7 使用质量、时长与错误元数据组织轨迹，RECAP 则进一步从执行回报学习价值，再据此构造优势条件。问题由“让模型知道这是什么行为”，推进到了“怎样从执行结果判断哪些行为值得加强”。
 
-依据：Hi Robot 第 4 节；π0.5 第 IV-A 节；MEM 第 III 节；π0.7 第 III 至 V 节。见[来源 P04、P05、P06、P11](PI系列解读/13-来源与核验记录.md)。
+依据：Hi Robot 第 4 节；π0.5 第 IV-A 节；MEM 第 III 节；π0.7 第 III 至 V 节。见来源 P04、P05、P06、P11。
 
 ## 五、经验学习：从拟合行为到区分质量和优化策略
 
@@ -647,7 +658,7 @@ RECAP 先收集轨迹与结果，训练价值模型，再估计动作优势并�
 
 ![RECAP：价值评价怎样进入策略](/media/pi-series-technical-analysis/recap-fig3-value-policy.png)
 
-*RECAP：价值评价怎样进入策略。来源：[[π0.6] A VLA That Learns From Experience](../%23paper/%5B%CF%800.6%5D%20A%20VLA%20That%20Learns%20From%20Experience.pdf#page=4)，原论文图 3，PDF 第 4 页。截取原图及图注，未改动图中内容。*
+*RECAP：价值评价怎样进入策略。来源：[π0.6] A VLA That Learns From Experience，原论文图 3，PDF 第 4 页。截取原图及图注，未改动图中内容。*
 
 **读图：** 从下往上看：价值模型估计回报，结合轨迹信息计算优势，优势经过二值化成为条件标签，再进入上方 VLA。标签连接行为评价与动作学习，动作专家仍沿用连续生成路径。
 
@@ -721,7 +732,7 @@ RECAP 更新 VLA 来吸收经验，频繁在线更新却需要较多计算与存
 
 ![RLT：从 VLA 表示到在线小策略](/media/pi-series-technical-analysis/rlt-fig1-overview.png)
 
-*RLT：从 VLA 表示到在线小策略。来源：[[RL Token] Bootstrapping Online RL with Vision-Language-Action Models](../%23paper/%5BRL%20Token%5D%20Bootstrapping%20Online%20RL%20with%20Vision-Language-Action%20Models.pdf#page=1)，原论文图 1，PDF 第 1 页。截取原图及图注，未改动图中内容。*
+*RLT：从 VLA 表示到在线小策略。来源：[RL Token] Bootstrapping Online RL with Vision-Language-Action Models，原论文图 1，PDF 第 1 页。截取原图及图注，未改动图中内容。*
 
 **读图：** 先看蓝色区域：编码器提取 RL Token，解码器提供重建监督。再沿箭头进入绿色区域：紧凑特征供 actor 与 critic 使用，基础动作专家同时提供参考动作。在线改进集中在较小的策略与价值网络。
 
@@ -818,7 +829,7 @@ actor 损失 $\mathcal L_{\mathrm{actor}}$ 中，价值项推动改进，参考�
 
 专门策略经过改进后，其执行轨迹又成为新的训练材料。π0.7 吸收这类 RL 专家数据，让局部优化得到的行为进入通用模型；元数据则帮助共享模型识别这些行为的质量。经验由此可以先改善一个策略，再通过数据参与更广的能力学习。第八章会结合数据消融检查这一步的收益。
 
-依据：RECAP 第 IV/V 节、算法 1；RLT 第 IV/V 节、式 (1) 至 (5)；π0.7 第 V/VI 节。见[来源 P07、P08、P11](PI系列解读/13-来源与核验记录.md)。
+依据：RECAP 第 IV/V 节、算法 1；RLT 第 IV/V 节、式 (1) 至 (5)；π0.7 第 V/VI 节。见来源 P07、P08、P11。
 
 ## 六、执行机制：动作生成怎样适应真实时间
 
@@ -846,7 +857,7 @@ $$
 
 ![RTC：推理延迟下的新旧动作衔接](/media/pi-series-technical-analysis/rtc-fig3-timing.png)
 
-*RTC：推理延迟下的新旧动作衔接。来源：[Real-Time Execution of Action Chunking Flow Policies](../%23paper/Real-Time%20Execution%20of%20Action%20Chunking%20Flow%20Policies.pdf#page=4)，原论文图 3，PDF 第 4 页。截取原图及图注，未改动图中内容。*
+*RTC：推理延迟下的新旧动作衔接。来源：Real-Time Execution of Action Chunking Flow Policies，原论文图 3，PDF 第 4 页。截取原图及图注，未改动图中内容。*
 
 **读图：** 沿时间轴从左向右看：推理开始后，旧动作仍会执行一段；这段已承诺前缀受到较强约束。中间重叠区域逐渐减弱约束，最右侧超出旧块的部分需要重新生成。上方蓝线是引导权重，不是机器人运动轨迹。
 
@@ -936,7 +947,7 @@ RTC 的作用发生在新块生成时。已承诺动作影响后续动作怎样�
 
 这些成本对应不同的速度指标。FAST 的训练加速、RLT 的在线更新成本和 RTC 的执行效率，不能直接放在同一列比较。单次生成更快，也要经过通信与控制链路，才可能转化为更高的任务吞吐量。
 
-依据：RTC 第 3 节、式 (2) 至 (5)、算法 1；训练时 RTC 第 IV 节。见[来源 P10、P12](PI系列解读/13-来源与核验记录.md)。
+依据：RTC 第 3 节、式 (2) 至 (5)、算法 1；训练时 RTC 第 IV 节。见来源 P10、P12。
 
 ## 七、源码贯通：从数据配置到控制接口
 
@@ -946,7 +957,7 @@ RTC 的作用发生在新块生成时。已承诺动作影响后续动作怎样�
 
 **配置**选择模型、数据和训练参数；**checkpoint** 保存某个训练时刻的模型权重等状态；**归一化资产**保存数据统计量，供输入缩放和输出还原使用。同一套程序通过这些内容确定这一次具体运行什么。
 
-[training/config.py](../openpi/src/openpi/training/config.py) 的 `TrainConfig`、`DataConfig`、`ModelTransformFactory` 和具体配置条目决定：
+[training/config.py](https://github.com/Physical-Intelligence/openpi/blob/main/src/openpi/training/config.py) 的 `TrainConfig`、`DataConfig`、`ModelTransformFactory` 和具体配置条目决定：
 
 - 网络类型、动作维数与预测长度。
 - 数据来源、字段重排和平台变换。
@@ -959,7 +970,7 @@ RTC 的作用发生在新块生成时。已承诺动作影响后续动作怎样�
 
 ### 7.2 数据层先统一字段，再统一数值含义
 
-确定配置之后，数据还不能直接送入网络。不同数据集使用的字段、图像布局与动作尺度可能不同，需要先整理成模型约定的输入。[data_loader.py](../openpi/src/openpi/training/data_loader.py) 的 `transform_dataset` 按下面的顺序完成这些处理：
+确定配置之后，数据还不能直接送入网络。不同数据集使用的字段、图像布局与动作尺度可能不同，需要先整理成模型约定的输入。[data_loader.py](https://github.com/Physical-Intelligence/openpi/blob/main/src/openpi/training/data_loader.py) 的 `transform_dataset` 按下面的顺序完成这些处理：
 
 ```text
 repack_transforms.inputs
@@ -982,7 +993,7 @@ delta_timestamps = {
 
 动作块长度 $H$ 与数据采样频率 $f$ 共同决定时间范围：首尾时间差为 $(H-1)/f$，按逐步消费计算的完整执行窗口通常记为 $H/f$。数据频率同时影响动作编码和实时调度。
 
-[transforms.py](../openpi/src/openpi/transforms.py) 中分位数归一化为：
+[transforms.py](https://github.com/Physical-Intelligence/openpi/blob/main/src/openpi/transforms.py) 中分位数归一化为：
 
 $$
 \widetilde x
@@ -1018,9 +1029,9 @@ padding 通过补齐位置统一长度或宽度；mask 标记哪些位置有效�
 | 动作         | $[B,H,32]$      | 加噪、输入投影和输出监督     |
 | 内部时间     | $[B]$           | 时间编码与动作专家条件       |
 
-张量形状中的批大小 $B$ 表示一次处理的样本数，动作块长度 $H$ 表示每个样本包含的未来动作数，文本序列长度 $L$ 表示文本 token 数；这里文本序列长度 $L$ 与实时执行部分的推理延迟 $L$ 属于不同语境。上述为本地默认接口，具体配置可覆盖。`Observation` 定义见 [models/model.py](../openpi/src/openpi/models/model.py)。
+张量形状中的批大小 $B$ 表示一次处理的样本数，动作块长度 $H$ 表示每个样本包含的未来动作数，文本序列长度 $L$ 表示文本 token 数；这里文本序列长度 $L$ 与实时执行部分的推理延迟 $L$ 属于不同语境。上述为本地默认接口，具体配置可覆盖。`Observation` 定义见 [models/model.py](https://github.com/Physical-Intelligence/openpi/blob/main/src/openpi/models/model.py)。
 
-[pi0.py](../openpi/src/openpi/models/pi0.py) 的 `embed_prefix` 编码各路图像与文本，并扩展相机掩码。`embed_suffix` 处理状态、带噪动作和时间。动作块内部可双向交互，以协调同一段生成轨迹；前缀与状态的可见范围由 `make_attn_mask` 组织。
+[pi0.py](https://github.com/Physical-Intelligence/openpi/blob/main/src/openpi/models/pi0.py) 的 `embed_prefix` 编码各路图像与文本，并扩展相机掩码。`embed_suffix` 处理状态、带噪动作和时间。动作块内部可双向交互，以协调同一段生成轨迹；前缀与状态的可见范围由 `make_attn_mask` 组织。
 
 ### 7.4 流匹配与 FAST 在损失处形成不同路径
 
@@ -1048,7 +1059,7 @@ return jnp.mean(jnp.square(v_t - u_t), axis=-1)
 
 输入动作张量形状 $[B,H,d_a]$ 的三个轴分别是批大小 $B$、动作块长度 $H$ 和每步动作维数 $d_a$。对动作维度取平均后，损失张量形状 $[B,H]$ 保留样本轴与控制步轴，再由外层训练步汇总。对照前面的 KI，可以看到这里已经有流匹配目标，完整的联合训练还需要离散动作目标、相应掩码和梯度截断路径。
 
-FAST 在更早的表示环节改变了这条路径：先把动作转换为频率系数，再量化成适合编码的整数序列，之后由骨干预测离散 token。前两步位于 [processing_action_tokenizer.py](../hf-assets/model/physical-intelligence/fast/processing_action_tokenizer.py)：
+FAST 在更早的表示环节改变了这条路径：先把动作转换为频率系数，再量化成适合编码的整数序列，之后由骨干预测离散 token。前两步位于 [processing_action_tokenizer.py](https://huggingface.co/physical-intelligence/fast/blob/main/processing_action_tokenizer.py)：
 
 ```python
 # 沿时间轴变换，各动作维度分别处理。
@@ -1057,13 +1068,13 @@ dct_coeff = dct(action_chunk, axis=1, norm='ortho')
 dct_coeff = np.around(dct_coeff * self.scale)
 ```
 
-[tokenizer.py](../openpi/src/openpi/models/tokenizer.py) 的 `FASTTokenizer` 将动作 ID 接入模型词表。`token_mask` 管理有效位置，`ar_mask` 管理因果可见性，`loss_mask` 管理监督位置。[pi0_fast.py](../openpi/src/openpi/models/pi0_fast.py) 的 `Pi0FAST.compute_loss` 计算离散预测损失，输出侧由 `ExtractFASTActions` 解码。
+[tokenizer.py](https://github.com/Physical-Intelligence/openpi/blob/main/src/openpi/models/tokenizer.py) 的 `FASTTokenizer` 将动作 ID 接入模型词表。`token_mask` 管理有效位置，`ar_mask` 管理因果可见性，`loss_mask` 管理监督位置。[pi0_fast.py](https://github.com/Physical-Intelligence/openpi/blob/main/src/openpi/models/pi0_fast.py) 的 `Pi0FAST.compute_loss` 计算离散预测损失，输出侧由 `ExtractFASTActions` 解码。
 
 本地 tokenizer 解码异常存在返回零数组的分支。部署接口需要识别解码失败状态，避免将后备数值直接解释为正常动作。
 
 ### 7.5 参数更新与知识隔离需要分别定位
 
-损失计算完成后，才进入真正改变权重的步骤。[scripts/train.py](../openpi/scripts/train.py) 的 `train_step` 恢复模型状态、汇总损失，通过 `nnx.value_and_grad` 计算梯度，再由优化器和 `optax.apply_updates` 更新参数。前置知识中的梯度更新，在这里对应到实际训练调用。
+损失计算完成后，才进入真正改变权重的步骤。[scripts/train.py](https://github.com/Physical-Intelligence/openpi/blob/main/scripts/train.py) 的 `train_step` 恢复模型状态、汇总损失，通过 `nnx.value_and_grad` 计算梯度，再由优化器和 `optax.apply_updates` 更新参数。前置知识中的梯度更新，在这里对应到实际训练调用。
 
 `trainable_filter` 和 `get_freeze_filter` 管理哪些参数可以更新。KI 则控制某种损失经过哪些计算路径到达参数，二者处于不同层面。
 
@@ -1079,9 +1090,9 @@ EMA 衰减系数 $\rho$ 决定历史参数的权重，当前模型参数 $\theta
 
 ### 7.6 推理把模型空间还原为平台动作
 
-训练结束后，部署既需要权重，也需要训练时的数值约定。只有两者配套，当前观测才能进入模型熟悉的空间，输出才能还原成正确动作。[policy_config.py](../openpi/src/openpi/policies/policy_config.py) 的 `create_trained_policy` 因而同时加载 JAX 或 PyTorch 权重、数据配置及 checkpoint 归一化资产。
+训练结束后，部署既需要权重，也需要训练时的数值约定。只有两者配套，当前观测才能进入模型熟悉的空间，输出才能还原成正确动作。[policy_config.py](https://github.com/Physical-Intelligence/openpi/blob/main/src/openpi/policies/policy_config.py) 的 `create_trained_policy` 因而同时加载 JAX 或 PyTorch 权重、数据配置及 checkpoint 归一化资产。
 
-[policy.py](../openpi/src/openpi/policies/policy.py) 的 `Policy.infer` 完成输入变换、添加批次维、构造 `Observation`、调用采样、取单样本与输出还原：
+[policy.py](https://github.com/Physical-Intelligence/openpi/blob/main/src/openpi/policies/policy.py) 的 `Policy.infer` 完成输入变换、添加批次维、构造 `Observation`、调用采样、取单样本与输出还原：
 
 ```text
 观测字段
@@ -1107,33 +1118,33 @@ dt = -1.0 / num_steps
 
 ### 7.7 从策略调用到实时执行
 
-动作还原完成，只意味着策略返回了数值。它何时生效、旧队列还剩多少动作、控制器怎样解释夹爪和坐标，都由执行链路继续决定。[serve_policy.py](../openpi/scripts/serve_policy.py) 和服务端提供策略请求入口，`openpi-client` 与平台示例处理客户端接入，底层再匹配控制频率、动作单位、坐标、夹爪、队列和时间戳。
+动作还原完成，只意味着策略返回了数值。它何时生效、旧队列还剩多少动作、控制器怎样解释夹爪和坐标，都由执行链路继续决定。[serve_policy.py](https://github.com/Physical-Intelligence/openpi/blob/main/scripts/serve_policy.py) 和服务端提供策略请求入口，`openpi-client` 与平台示例处理客户端接入，底层再匹配控制频率、动作单位、坐标、夹爪、队列和时间戳。
 
-本地 RTC [model.py](../real-time-chunking-kinetix/src/model.py) 中：
+本地 RTC model.py 中：
 
 - `get_prefix_weights` 构造重叠区权重。
 - `realtime_action` 在相应配置下用 `jax.vjp` 计算引导；设置 `simulated_delay` 时使用干净前缀和逐位置时间条件。
 - `loss` 随机采样延迟并对已知前缀作掩码。
 
-计算向量-Jacobian 乘积的 `jax.vjp` 对应前述梯度引导项 $J^\top e$，无需显式构造完整 Jacobian。[eval_flow.py](../real-time-chunking-kinetix/src/eval_flow.py) 将推理期间旧块前缀与新块后续拼接，评估异步时序。
+计算向量-Jacobian 乘积的 `jax.vjp` 对应前述梯度引导项 $J^\top e$，无需显式构造完整 Jacobian。eval_flow.py 将推理期间旧块前缀与新块后续拼接，评估异步时序。
 
 `Policy.infer` 的 `infer_ms` 主要围绕采样调用，未覆盖全部变换、通信与执行；JAX/GPU 异步还影响计时。端到端测量应同步并覆盖实际控制链。
 
 ### 7.8 不同实现与相关仓库的对应范围
 
-PyTorch 的 [PI0Pytorch](../openpi/src/openpi/models_pytorch/pi0_pytorch.py) 以 `forward` 为训练入口，JAX 使用 `compute_loss`。跨实现比较要核对预处理、状态编码、掩码、噪声约定、精度和输出还原，API 名称只提供初始定位。
+PyTorch 的 [PI0Pytorch](https://github.com/Physical-Intelligence/openpi/blob/main/src/openpi/models_pytorch/pi0_pytorch.py) 以 `forward` 为训练入口，JAX 使用 `compute_loss`。跨实现比较要核对预处理、状态编码、掩码、噪声约定、精度和输出还原，API 名称只提供初始定位。
 
 | 本地项目                                                              | 在技术链中的位置                    |
 | --------------------------------------------------------------------- | ----------------------------------- |
-| [pi-data-sharing](../pi-data-sharing/README.md)                       | 数据元信息、标注与共享约定          |
-| [rlds_dataset_builder](../rlds_dataset_builder/README.md)             | episode、step、观测和动作的存储组织 |
-| [aloha](../aloha/README.md)                                           | 双臂平台与示范采集接口              |
-| [augmax](../augmax/README.md)                                         | 图像增强与输入分布处理              |
-| [mujoco](../mujoco/README.md)                                         | 仿真状态、控制与物理步进            |
-| [openpi-basic-control](../openpi-basic-control/README.md)             | 模型动作与底层控制之间的接口        |
-| [real-time-chunking-kinetix](../real-time-chunking-kinetix/README.md) | 动作条件生成与延迟评估              |
+| pi-data-sharing                       | 数据元信息、标注与共享约定          |
+| rlds_dataset_builder             | episode、step、观测和动作的存储组织 |
+| aloha                                           | 双臂平台与示范采集接口              |
+| augmax                                         | 图像增强与输入分布处理              |
+| mujoco                                         | 仿真状态、控制与物理步进            |
+| openpi-basic-control             | 模型动作与底层控制之间的接口        |
+| real-time-chunking-kinetix | 动作条件生成与延迟评估              |
 
-这些目录分别承担数据、模型、仿真和控制方面的职责。结合[代码版本与核验记录](PI系列解读/13-来源与核验记录.md)，就能把论文中的机制对应到本地实际可读的部分。
+这些目录分别承担数据、模型、仿真和控制方面的职责。结合代码版本与核验记录，就能把论文中的机制对应到本地实际可读的部分。
 
 ## 八、综合判断：技术联系、实验证据与未解决问题
 
@@ -1157,7 +1168,7 @@ PyTorch 的 [PI0Pytorch](../openpi/src/openpi/models_pytorch/pi0_pytorch.py) 以
 | 小策略支持在线适应             | RLT 每任务 1 至 10 小时准备示范，在线数据约 15 分钟至 5 小时 | 准备与在线成本分开                                  |
 | 前缀条件改善异步执行           | RTC 的 12 个 Kinetix 动态任务和 6 个真实双臂任务             | 比较不同延迟下成功率、平滑性和吞吐量                |
 
-出处：FAST 第 VI 节；KI 第 4/6 节；π0.5 第 V 节；MEM 第 IV 节及图 6；人类迁移第 V 节与图 7；RECAP、RLT 第 VI 节；RTC 实验章节。链接统一见[来源记录](PI系列解读/13-来源与核验记录.md)。
+出处：FAST 第 VI 节；KI 第 4/6 节；π0.5 第 V 节；MEM 第 IV 节及图 6；人类迁移第 V 节与图 7；RECAP、RLT 第 VI 节；RTC 实验章节。链接统一见来源记录。
 
 MEM 长任务评估每策略、任务或配方为 10 次 rollout，图中报告均值和标准误；延迟测试使用 π0.6、四路相机和 H100。RLT 关键阶段每策略、任务 50 次评估，完整任务另行报告；移除动作块的消融同时更换视觉编码器，存在混杂因素。
 
