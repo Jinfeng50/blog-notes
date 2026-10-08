@@ -20,6 +20,10 @@
         "JetBrains Mono", "Fira Code", Consolas, monospace;
 }
 
+.vp-doc mjx-container {
+    overflow: visible;
+}
+
 .dark {
     --vp-c-bg: #101214;
     --vp-c-bg-alt: #171a1d;
